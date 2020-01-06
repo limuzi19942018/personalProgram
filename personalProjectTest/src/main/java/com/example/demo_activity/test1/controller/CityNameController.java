@@ -3,6 +3,7 @@ package com.example.demo_activity.test1.controller;
 
 import com.example.demo_activity.test1.service.ICityNameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CityNameController {
     @Autowired
     private ICityNameService cityNameService;
+
+
 
     @ResponseBody
     @RequestMapping(value = "/getCityNameById",method = RequestMethod.GET)
