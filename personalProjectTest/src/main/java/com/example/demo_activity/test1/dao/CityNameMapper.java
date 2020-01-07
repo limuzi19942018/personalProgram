@@ -1,7 +1,7 @@
 package com.example.demo_activity.test1.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo_activity.test1.model.CityName;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>

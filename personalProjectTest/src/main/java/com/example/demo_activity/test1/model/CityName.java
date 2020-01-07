@@ -1,9 +1,14 @@
 package com.example.demo_activity.test1.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableName;
+
+
 import java.io.Serializable;
 
 /**
@@ -19,6 +24,7 @@ public class CityName extends Model<CityName> {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId(type= IdType.AUTO)
     private Integer id;
     private String country;
     private String city;
