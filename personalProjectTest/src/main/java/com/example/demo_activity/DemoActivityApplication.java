@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 
 @SpringBootApplication
+//@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @MapperScan("com.example.demo_activity.test1.dao")
 public class DemoActivityApplication {
 	private final static Logger logger = LoggerFactory.getLogger(DemoActivityApplication.class);

@@ -3,9 +3,9 @@ guns:
   muti-datasource-open: true #是否开启多数据源(true/false)
 ##################spring配置############################
 ########工作流配置##########
-flowable:
-  check-process-definitions: false #flowable自动部署的设置
-  database-schema-update: true
+#flowable:
+  #check-process-definitions: false #flowable自动部署的设置
+  #database-schema-update: true
 server:
   port: 8091
 spring:
@@ -26,6 +26,12 @@ spring:
     pool:
       max-idle: 8
       max-wait: -1
+#flowable:
+  #async-executor-activate: false #关闭定时任务JOB
+  #check-process-definitions: false #flowable自动部署的设置
+  activiti:
+    check-process-definitions: false
+    database-schema-update: true
 
 #多数据源
 test:
