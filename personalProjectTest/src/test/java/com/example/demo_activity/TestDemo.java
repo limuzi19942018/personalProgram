@@ -49,4 +49,8 @@ public class TestDemo {
        BigDecimal divide = new BigDecimal(d1).divide(new BigDecimal(i1));
        System.out.println(divide.toString());
    }
+   @Test
+    public void testFormula(){
+       System.out.println("我是李梦成");
+   }
 }

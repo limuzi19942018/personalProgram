@@ -1,8 +1,9 @@
 package com.example.demo_activity.test1.service.impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+//import com.baomidou.mybatisplus.core.conditions.Wrapper;
+//import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.example.demo_activity.test1.dao.CityNameMapper;
 import com.example.demo_activity.test1.model.CityName;
 import com.example.demo_activity.test1.multidatasource.DSEnum;
@@ -42,11 +43,14 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
         Object test = redisTemplate.opsForValue().get("test");
         System.out.println("key值为"+test.toString());*/
        // return cityNameMapper.getCityNameById(cityId);
-        CityName cityName = iCityNameService.getById(1);
-        CityName cityName1 = new CityName();
-        cityName1.setCity("xinyang");
-        cityName1.setCountry("zhongguo");
-        iCityNameService.save(cityName1);
-        return cityName.getCountry();
+//        CityName cityName = iCityNameService.getById(1);
+//        CityName cityName1 = new CityName();
+//        cityName1.setCity("xinyang");
+//        cityName1.setCountry("zhongguo");
+//        iCityNameService.save(cityName1);
+//        return cityName.getCountry();
+        CityName cityName = iCityNameService.selectById(cityId);
+        String city = cityName.getCity();
+        return city;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.demo_activity.test1.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+//import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.service.IService;
 import com.example.demo_activity.test1.model.CityName;
 
 /**

@@ -1,8 +1,10 @@
 package com.example.demo_activity.test1.mybatisconfig;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+//import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
+//import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.plugins.OptimisticLockerInterceptor;
+import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import com.example.demo_activity.test1.datasource.DruidProperties;
 import com.example.demo_activity.test1.multidatasource.DSEnum;
 import com.example.demo_activity.test1.multidatasource.DynamicDataSource;
