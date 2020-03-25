@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableSwagger2
 @SpringBootApplication
 //@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 //@SpringBootApplication(exclude={org.activiti.spring.boot.SecurityAutoConfiguration.class})

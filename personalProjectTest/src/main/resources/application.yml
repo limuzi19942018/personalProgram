@@ -26,6 +26,11 @@ spring:
     pool:
       max-idle: 8
       max-wait: -1
+#文件上传限制
+  http:
+    multipart:
+      max-file-size: 500MB   #单个文件大小
+      max-request-size: 2000MB #总上传的数据大小
 
 #多数据源
 test:

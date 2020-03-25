@@ -51,6 +51,7 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
 //        return cityName.getCountry();
         CityName cityName = iCityNameService.selectById(cityId);
         String city = cityName.getCity();
+        System.out.println("名字是"+city);
         return city;
     }
 }
