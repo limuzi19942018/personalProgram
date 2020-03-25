@@ -2,6 +2,7 @@ package com.example.demo_activity.test1.controller;
 
 
 import com.example.demo_activity.test1.service.ICityNameService;
+import com.example.demo_activity.test1.utils.FileImportExportUtilss;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -59,6 +63,7 @@ public class CityNameController {
         if(file.isEmpty()){
             return "文件是空";
         }
+        FileImportExportUtilss.zipDecompression(file);
         String originalFilename = file.getOriginalFilename();
         LOGGER.info("文件名称是:{}",originalFilename);
         return null;
