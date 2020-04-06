@@ -1,6 +1,10 @@
 package com.example.demo_activity;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringBootVersion;
+import org.springframework.core.SpringVersion;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,6 +17,8 @@ import java.util.List;
  */
 
 public class TestDemo {
+    
+    private final static Logger LOGGER = LoggerFactory.getLogger(TestDemo.class);
     public void testOrder(Double d1){
         Double []  d={8.0,9.2,10.5,87.3,200.25,312.5};
         List<Object> list = new ArrayList<>(d.length+1);
@@ -53,4 +59,11 @@ public class TestDemo {
     public void testFormula(){
        System.out.println("我是李梦成");
    }
+    @Test
+    public void testVersion(){
+        String springVersion = SpringVersion.getVersion();
+        LOGGER.info("spring版本号:{}",springVersion);
+        String springBootVersion = SpringBootVersion.getVersion();
+        LOGGER.info("springboot版本号:{}",springBootVersion);
+    }
 }

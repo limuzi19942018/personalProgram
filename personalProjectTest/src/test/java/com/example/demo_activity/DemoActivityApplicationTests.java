@@ -1,12 +1,15 @@
 package com.example.demo_activity;
 
 import com.example.demo_activity.test1.utils.ActivitiUtils;
+import com.example.demo_activity.test1.utils.FileUtils;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -132,4 +135,12 @@ public   class DemoActivityApplicationTests {
 		ActivitiUtils.completeEmployeeTask(task,variables);
 	}
 
+	@Test
+	public void testUpload(){
+		String filePath="C:\\Users\\Lenovo\\Desktop\\哈哈.txt";
+		FileUtils fileUtil=new FileUtils();
+		byte[] bytes = fileUtil.getBytes(filePath);
+		fileUtil.httpPost(bytes,"哈哈.txt");
+		//fileUtil.testSocekt(filePath);
+	}
 }
