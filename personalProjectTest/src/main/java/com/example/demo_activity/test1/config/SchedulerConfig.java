@@ -17,7 +17,7 @@ import java.util.Properties;
  */
 
 
-@Configuration
+//@Configuration
 public class SchedulerConfig {
 
         @Bean(name="SchedulerFactory")

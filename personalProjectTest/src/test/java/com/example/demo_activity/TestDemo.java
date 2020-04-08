@@ -1,5 +1,6 @@
 package com.example.demo_activity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,9 +56,17 @@ public class TestDemo {
        BigDecimal divide = new BigDecimal(d1).divide(new BigDecimal(i1));
        System.out.println(divide.toString());
    }
+
    @Test
     public void testFormula(){
-       System.out.println("我是李梦成");
+       boolean blank1 = StringUtils.isBlank("");
+       boolean blank2 = StringUtils.isBlank(null);
+       boolean empty1 = StringUtils.isEmpty("");
+       boolean empty2 = StringUtils.isEmpty(null);
+       System.out.println("111"+blank1);
+       System.out.println("222"+blank2);
+       System.out.println("333"+empty1);
+       System.out.println("444"+empty2);
    }
     @Test
     public void testVersion(){

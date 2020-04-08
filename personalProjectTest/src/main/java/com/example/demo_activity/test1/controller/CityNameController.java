@@ -2,7 +2,10 @@ package com.example.demo_activity.test1.controller;
 
 
 import com.example.demo_activity.test1.service.ICityNameService;
+import com.example.demo_activity.test1.utils.AliYunUploadFile;
 import com.example.demo_activity.test1.utils.FileImportExportUtilss;
+import com.example.demo_activity.test1.utils.FileUtils;
+import com.example.demo_activity.test1.utils.ObjectUtils;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -63,11 +66,35 @@ public class CityNameController {
         if(file.isEmpty()){
             return "文件是空";
         }
-        FileImportExportUtilss.zipDecompression(file);
+        //FileImportExportUtilss.zipDecompression(file);
         String originalFilename = file.getOriginalFilename();
         LOGGER.info("文件名称是:{}",originalFilename);
-        return null;
+        try {
+            String temUrl="C:\\Users\\Lenovo\\Desktop\\home_zlpg"+File.separator+originalFilename;
+            File temFile = new File(temUrl);
+            file.transferTo(temFile);
+            //String aliyunUrl="report"+File.separator+ ObjectUtils.getShortUuid()+File.separator+originalFilename;
+            String aliyunUrl="report"+File.separator+ "ee599658f1334e8bacc88f699362c53a"+File.separator+originalFilename;
+            AliYunUploadFile.uploadFile(temUrl,aliyunUrl);
+            LOGGER.info("阿里云路径是:{}",aliyunUrl);
+            //删除本地文件
+            FileUtils.deleteFile(temUrl);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "上传成功";
     }
 
+
+    @ResponseBody
+    @RequestMapping(value = "/deleteFile",method = RequestMethod.POST)
+    public Object deleteFile(String filePath){
+        Boolean exitPathUrl = AliYunUploadFile.isExitPathUrl(filePath);
+        LOGGER.info("结果是:{}",exitPathUrl);
+        if(exitPathUrl){
+         AliYunUploadFile.deleteFile(filePath);
+        }
+        return "删除成功";
+    }
 }
 
