@@ -10,7 +10,9 @@ import java.util.List;
  */
 
 public class Obj {
+    //用Collections.synchronizedList()方法处理Arraylist，使之变得线程安全
     //private List<String> synchronizedList = Collections.synchronizedList(new ArrayList<>());
+    //线程不安全
     private List<String> synchronizedList = new ArrayList<>();
     public void add(String s) {
         synchronizedList.add(s);
