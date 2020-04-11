@@ -160,7 +160,7 @@ public class AliYunUploadFile {
     }
     
     /**
-     * 判断数据库文件是否存在，不存在从阿里云下载
+     * 判断阿里云文件是否存在
      *
      * @param aliyunUrl 存储文件路径
      */
