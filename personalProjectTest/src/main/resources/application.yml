@@ -21,7 +21,8 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 5
-    password: test_123456
+    # redis暂时没有密码
+    #password: test_123456
     timeout: 5000
     pool:
       max-idle: 8

@@ -8,8 +8,10 @@ package com.example.demo_activity.test1.model;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -37,6 +39,15 @@ public class    Person extends Model<Person> {
 
     private String city;
 
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Integer getId() {
         return id;

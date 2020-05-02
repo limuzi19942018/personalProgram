@@ -3,6 +3,7 @@ package com.example.demo_activity.test1.service.impl;
 
 //import com.baomidou.mybatisplus.core.conditions.Wrapper;
 //import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.example.demo_activity.test1.dao.CityNameMapper;
 import com.example.demo_activity.test1.model.CityName;
@@ -29,7 +30,7 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
     private CityNameMapper cityNameMapper;
 
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
     //private RedisTemplate redisTemplate;//用这个注入，图形化界面打开key会出现乱码,因为redis的key和value需要序列化
 
     @Autowired
@@ -38,7 +39,7 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
     @Override
     @DataSource(name = DSEnum.DATA_SOURCE_TEST)
     //@TestMethod
-    public String getCityNameById(String cityId) {
+    public CityName getCityNameById(String cityId) {
         /*redisTemplate.opsForValue().set("test123","123456abc123456");
         Object test = redisTemplate.opsForValue().get("test");
         System.out.println("key值为"+test.toString());*/
@@ -50,8 +51,9 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
 //        iCityNameService.save(cityName1);
 //        return cityName.getCountry();
         CityName cityName = iCityNameService.selectById(cityId);
-        String city = cityName.getCity();
+        CityName cityname = iCityNameService.selectOne(new EntityWrapper<CityName>().eq("id", "1"));
+        String city = cityname.getCity();
         System.out.println("名字是"+city);
-        return city;
+        return cityname;
     }
 }

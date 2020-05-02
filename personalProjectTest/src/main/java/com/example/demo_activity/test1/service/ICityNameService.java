@@ -14,6 +14,6 @@ import com.example.demo_activity.test1.model.CityName;
  */
 public interface ICityNameService extends IService<CityName> {
 
-    String getCityNameById(String cityId);
+    CityName getCityNameById(String cityId);
 
 }

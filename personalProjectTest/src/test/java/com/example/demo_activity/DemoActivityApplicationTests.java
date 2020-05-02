@@ -6,17 +6,28 @@ import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DemoActivityApplication.class)
 @WebAppConfiguration
 public   class DemoActivityApplicationTests {
+
+
+	@Autowired
+	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
 
 
 	/**
@@ -139,5 +150,50 @@ public   class DemoActivityApplicationTests {
 		byte[] bytes = fileUtil.getBytes(filePath);
 		fileUtil.httpPost(bytes,"哈哈.txt");
 		//fileUtil.testSocekt(filePath);
+	}
+
+	@Test
+	public void testRedis(){
+		//存map,下面的key类似于map的名字，hashKey类似于map中的key值，value就是key对应的value值
+		stringRedisTemplate.opsForHash().put("hello","hashkey2","iamachinese2");
+		stringRedisTemplate.opsForHash().put("hello","hashkey1","iamachinese2");
+	}
+
+
+	@Test
+	public void testByuseTemplateRedis(){
+		//存map,下面的key类似于map的名字，hashKey类似于map中的key值，value就是key对应的value值
+		redisTemplate.opsForHash().put("heihei","hashkey_11","chineselongyear1");
+		redisTemplate.opsForHash().put("heihei","hashkey_22","chineselongyear2");
+	}
+
+	//获取指定变量中 的hashmap值（也就是说value值，直接越过key）
+	@Test
+	public void getHashMap(){
+		List<Object> hashList = stringRedisTemplate.opsForHash().values("hello");
+		if(hashList!=null && hashList.size()>0){
+			for (Object obj : hashList) {
+				System.out.println("通过values(H key)方法获取变量中的hashMap值:" + obj.toString());
+			}
+		}
+	}
+	@Test
+	public void getmap(){
+		//获取变量中的键值对（map对象）。
+		//Map<Object,Object> map = stringRedisTemplate.opsForHash().entries("hello");
+		Map<Object,Object> map =redisTemplate.opsForHash().entries("heihei");
+		if(map!=null && map.size()>0){
+			for (Object obj : map.keySet()) {
+				System.out.println("通过entries(H key)方法获取变量中的键为:" + obj.toString());
+				System.out.println("通过entries(H key)方法获取变量中的值为:" + map.get(obj).toString());
+			}
+		}
+	}
+
+	@Test
+	public void getValueBykey(){
+		//获取变量中的指定map键是否有值,如果存在该map键则获取值，没有则返回null。
+		Object mapValue = redisTemplate.opsForHash().get("hello","hashkey2");
+		System.out.println("通过get(H key, Object hashKey)方法获取map键的值:" + mapValue);
 	}
 }

@@ -1,6 +1,7 @@
 package com.example.demo_activity.test1.controller;
 
 
+import com.example.demo_activity.test1.model.CityName;
 import com.example.demo_activity.test1.service.ICityNameService;
 import com.example.demo_activity.test1.utils.AliYunUploadFile;
 import com.example.demo_activity.test1.utils.FileImportExportUtilss;
@@ -49,8 +50,8 @@ public class CityNameController {
     @ResponseBody
     @RequestMapping(value = "/getCityNameById",method = RequestMethod.GET)
     public Object getPersonById(String cityId){
-        String cityName = cityNameService.getCityNameById(cityId);
-        return cityName;
+        CityName cityNameById = cityNameService.getCityNameById(cityId);
+        return cityNameById;
     }
 
     /**
