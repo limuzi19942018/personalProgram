@@ -9,12 +9,9 @@ import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,5 +83,13 @@ public class PersonController {
         iPersonService.insert(person);
         return new SuccessTip("成功");
     }
+
+
+    @ResponseBody
+    @PostMapping(value = "/testTran")
+        public Object testTran(String personId){
+        return new SuccessTip(iPersonService.update(personId));
+    }
+
 }
 

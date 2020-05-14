@@ -13,10 +13,7 @@ import org.springframework.core.SpringVersion;
 import java.io.*;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author: yongl
@@ -153,5 +150,25 @@ public class TestDemo {
     public void testEnum() {
         String exPath = TemplatePathEnum.getExPath(1);
         System.out.println(exPath);
+    }
+    @Test
+    public void testException(){
+        System.out.println("我要开始执行了");
+        try {
+            System.out.println("-----");
+            int number=1/0;
+            System.out.println("我应该不打印");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("我倒偶滴------");
+        long time = new Date().getTime();
+        //1589433878904
+        System.out.println(String.valueOf(time));
+        String fileName="资产基础法.xls";
+        String prefix = fileName.substring(0, fileName.lastIndexOf("."));
+        String fileSufix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String finalName = String.valueOf(new Date().getTime()) +"_"+ prefix + "." + fileSufix;
+        System.out.println(finalName);
     }
 }

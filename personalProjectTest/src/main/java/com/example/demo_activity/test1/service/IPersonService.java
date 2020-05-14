@@ -16,4 +16,5 @@ public interface IPersonService extends IService<Person> {
 
     String getPersonById(String personId);
 
+    Object update(String personId);
 }
