@@ -50,17 +50,54 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         Person person = this.selectById(personId);
         try {
             if (ObjectUtils.isNotNull(person)) {
-                person.setAddress("信阳224455");
+                person.setAddress("信阳666");
                 boolean flag = this.updateById(person);
                 int number=1/0;
-                //return flag;
+                return flag;
             }
         }catch (Exception e){
             e.printStackTrace();
-            //如果有异常，在异常两厘米处理一些其他业务
             System.out.println("我是异常后面的语句");
+            //直接抛出exception，接口会报500
             //throw new RuntimeException();
+            //设置事务回滚，此时接口依然返回200
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return false;
+    }
+
+    @Transactional
+    @Override
+    public Object updateByThrows(String personId) throws Exception{
+        Person person = this.selectById(personId);
+        if (ObjectUtils.isNotNull(person)) {
+            person.setAddress("河南");
+            boolean flag = this.updateById(person);
+            //int number=1/0;
+            return flag;
+        }
+        return false;
+    }
+
+    @Transactional
+    @Override
+    public Object testThrowsAndTryCatch(String personId)throws Exception {
+        Person person = this.selectById(personId);
+        try {
+            if (ObjectUtils.isNotNull(person)) {
+                person.setAddress("信阳666");
+                boolean flag = this.updateById(person);
+                int number=1/0;
+                return flag;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("我是异常后面的语句");
+            throw new NullPointerException();
+            //直接抛出exception，接口会报500
+            //throw new RuntimeException();
+            //设置事务回滚，此时接口依然返回200
+            //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return false;
     }

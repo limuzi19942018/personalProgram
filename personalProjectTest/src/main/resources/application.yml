@@ -38,8 +38,8 @@ aliyun:
   access-id: LTAI4Ff8JDEGbdotaX4QLMWR
   access-key: aYGfLgfk1ZxoiJu9UlkvPSyaHBcoAJ
   bucket: limuzi-aliyun-2020
-  dir: zlpg/
-  server-path: /data/zlpg
+  dir: lyFile/
+  server-path: c:/lyFile
 
 #多数据源
 test:

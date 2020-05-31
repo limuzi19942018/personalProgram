@@ -1,7 +1,9 @@
 package com.example.demo_activity.test1.utils;
 
 import cn.hutool.core.io.FileUtil;
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -10,9 +12,12 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipFile;
 
 /**
  * @author Administrator 文件管理操作实用类
@@ -90,7 +95,7 @@ public class FileUtils {
     public static void deleteFileByPath(String filePath) {
         try {
             File myDelFile = new File(filePath);
-            if (myDelFile.exists()){
+            if (myDelFile.exists()) {
                 myDelFile.delete();
             }
         } catch (Exception e) {
@@ -629,7 +634,7 @@ public class FileUtils {
      */
     public static void delFolder(String staticPath) {
         File file = new File(staticPath);
-        if(file.exists()){
+        if (file.exists()) {
             deleteFile(file);
             file.delete();
         }
@@ -806,21 +811,156 @@ public class FileUtils {
         return filename;
     }
 
-/*    public static void copyFile(HttpServletRequest request, String fileUrl, String fileName, String tmpdir) {
-        //判断数据库文件是否存在，不存在去阿里云下载
-        String pathUrl = AliYunUploadFile.isExitPathUrl(request, fileUrl);
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(pathUrl)) {
-            //将根路径里“\\”转换为"/"
-            pathUrl = pathUrl.replaceAll("\\\\", "/");
-            File file = new File(pathUrl);
-            if (file.exists()) {
-                File newFile = new File(tmpdir + File.separator + fileName);
-                FileUtil.copy(file, newFile, true);
-                //删除本地文件
-                if(file.exists()){
-                    file.delete();
+    /*    public static void copyFile(HttpServletRequest request, String fileUrl, String fileName, String tmpdir) {
+            //判断数据库文件是否存在，不存在去阿里云下载
+            String pathUrl = AliYunUploadFile.isExitPathUrl(request, fileUrl);
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(pathUrl)) {
+                //将根路径里“\\”转换为"/"
+                pathUrl = pathUrl.replaceAll("\\\\", "/");
+                File file = new File(pathUrl);
+                if (file.exists()) {
+                    File newFile = new File(tmpdir + File.separator + fileName);
+                    FileUtil.copy(file, newFile, true);
+                    //删除本地文件
+                    if(file.exists()){
+                        file.delete();
+                    }
+                }
+            }
+        }*/
+
+
+    public static void zipDecompression(MultipartFile file, List<File> list)throws Exception {
+        //创建临时文件夹解压文件
+        String fileName = file.getOriginalFilename();
+        //创建临时路径存放解压后的文件
+        String tempDestinationFileUrl = getTempDestinationFileUrl();
+        //拼接盘符路径+后缀路径
+        tempDestinationFileUrl = AliYunUploadFile.getRealPath(tempDestinationFileUrl);
+        //tempDestinationFileUrl="C:\\Users\\Lenovo\\Desktop\\home_zlpg\\tem_des";
+        //String path = "d:/zip/";
+        File dir = new File(tempDestinationFileUrl);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        //创建临时路径存放压缩包
+        String tempZipFileUrl = getTempZipFileUrl();
+        tempZipFileUrl = AliYunUploadFile.getRealPath(tempZipFileUrl);
+        //tempZipFileUrl="C:\\Users\\Lenovo\\Desktop\\home_zlpg\\tem_zip";
+        //String filePath = "d:/test/";
+        File fileDir = new File(tempZipFileUrl);
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
+        }
+        File saveFile = new File(fileDir, fileName);//将压缩包解析到指定位置
+        try {
+            file.transferTo(saveFile);
+            String newFilePath = tempZipFileUrl + File.separator + fileName;
+            File zipFile = new File(newFilePath);
+            //unZipFiles(zipFile, tempDestinationFileUrl, list);//解压文件，获取文件路径
+            unZipFiles(saveFile, tempDestinationFileUrl, list);//解压文件，获取文件路径
+            //删除存放压缩包的临时文件夹
+            //FileUtils.deleteFile(tempZipFileUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("解压执行失败");
+            throw new IOException("解压执行失败");
+        }
+        //程序结束时，删除临时文件
+        deleteFiles(tempZipFileUrl);//删除压缩包文件夹
+        //deleteFiles(tempDestinationFileUrl);//删除解压文件夹**
+    }
+    public static String getTempZipFileUrl() {
+        String yyyyMmStr = DateUtils.formatDate(new Date(), "yyyy-MM");
+        return "tem_zip" + File.separator + yyyyMmStr;
+    }
+    public static String getTempDestinationFileUrl() {
+        String yyyyMmStr = DateUtils.formatDate(new Date(), "yyyy-MM");
+        return "tem_des" + File.separator + yyyyMmStr;
+    }
+
+    private static void unZipFiles(File srcFile, String destDirPath, List<File> list) {
+        // 判断源文件是否存在
+        if (!srcFile.exists()) {
+            throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
+        }
+        // 开始解压
+        ZipFile zipFile = null;
+        try {
+            //编码不设置的话，报java.lang.IllegalArgumentException: MALFORMED异常
+            zipFile = new ZipFile(srcFile, Charset.forName("GBK"));
+            Enumeration<?> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                java.util.zip.ZipEntry entry = (java.util.zip.ZipEntry) entries.nextElement();
+                // 如果是文件夹，就创建个文件夹
+                if (entry.isDirectory()) {
+                    String dirPath = destDirPath + "/" + entry.getName();
+                    File dir = new File(dirPath);
+                    dir.mkdirs();
+                    File[] files = dir.listFiles();
+                    for (File file : files) {
+                        //System.out.println("名称" + file.getName() + "---路径" + file.getAbsolutePath());
+                        list.add(file);
+                    }
+                } else {
+                    // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
+                    File targetFile = new File(destDirPath + "/" + entry.getName());
+                    // 保证这个文件的父文件夹必须要存在
+                    //System.out.println("名称" + targetFile.getName() + "---路径" + targetFile.getAbsolutePath());
+                    list.add(targetFile);
+                   /* if(!targetFile.getParentFile().exists()){
+                    }*/
+                    targetFile.createNewFile();
+                    // 将压缩文件内容写入到这个文件中
+                    InputStream is = zipFile.getInputStream(entry);
+                    FileOutputStream fos = new FileOutputStream(targetFile);
+                    int len;
+                    byte[] buf = new byte[1024];
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                    // 关流顺序，先打开的后关闭
+                    fos.close();
+                    is.close();
+                }
+            }
+        } catch (Exception e) {
+            //throw new RuntimeException("unzip error from ZipUtils", e);
+            e.printStackTrace();
+        } finally {
+            if (zipFile != null) {
+                try {
+                    zipFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
-    }*/
+    }
+
+    private static void deleteFiles(String filePath) {
+        File file = new File(filePath);
+        if ((!file.exists()) || (!file.isDirectory())) {
+            System.out.println("file not exist");
+            return;
+        }
+        String[] tempList = file.list();
+        File temp = null;
+        for (int i = 0; i < tempList.length; i++) {
+            if (filePath.endsWith(File.separator)) {
+                temp = new File(filePath + tempList[i]);
+            } else {
+                temp = new File(filePath + File.separator + tempList[i]);
+            }
+            if (temp.isFile()) {
+                temp.delete();
+            }
+            if (temp.isDirectory()) {
+                deleteFiles(filePath + "/" + tempList[i]);
+            }
+        }
+        // 空文件的删除
+        file.delete();
+    }
+
 }

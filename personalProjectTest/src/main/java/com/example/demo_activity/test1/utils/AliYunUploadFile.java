@@ -54,10 +54,10 @@ public class AliYunUploadFile {
     public static long uploadFile(String pathUrl, String filePath) throws IOException {
         OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
         try {
-            System.out.println("阿里云配置endpoint："+endpoint);
-            System.out.println("阿里云配置accessKeyId："+accessKeyId);
-            System.out.println("阿里云配置accessKeySecret："+accessKeySecret);
-            System.out.println("阿里云配置bucketName："+bucketName);
+            //System.out.println("阿里云配置endpoint："+endpoint);
+            //System.out.println("阿里云配置accessKeyId："+accessKeyId);
+            //System.out.println("阿里云配置accessKeySecret："+accessKeySecret);
+            //System.out.println("阿里云配置bucketName："+bucketName);
             client.putObject(new PutObjectRequest(bucketName, filePath, new File(pathUrl)));
             //获取文件大小
             SimplifiedObjectMeta objectMeta = client.getSimplifiedObjectMeta(bucketName, filePath);
@@ -91,10 +91,10 @@ public class AliYunUploadFile {
 
     public static long uploadFileToAliyun(File file, String filePath) throws IOException {
         OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
-        System.out.println("阿里云配置endpoint："+endpoint);
-        System.out.println("阿里云配置accessKeyId："+accessKeyId);
-        System.out.println("阿里云配置accessKeySecret："+accessKeySecret);
-        System.out.println("阿里云配置bucketName："+bucketName);
+        //System.out.println("阿里云配置endpoint："+endpoint);
+        //System.out.println("阿里云配置accessKeyId："+accessKeyId);
+        //System.out.println("阿里云配置accessKeySecret："+accessKeySecret);
+        //System.out.println("阿里云配置bucketName："+bucketName);
         try {
             client.putObject(new PutObjectRequest(bucketName, filePath, file));
             //获取文件大小
@@ -197,16 +197,16 @@ public class AliYunUploadFile {
      */
     public static String getAlyUrl(String key) {
         OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
-        System.out.println("阿里云配置endpoint："+endpoint);
-        System.out.println("阿里云配置accessKeyId："+accessKeyId);
-        System.out.println("阿里云配置accessKeySecret："+accessKeySecret);
-        System.out.println("阿里云配置bucketName："+bucketName);
+        //System.out.println("阿里云配置endpoint："+endpoint);
+        //System.out.println("阿里云配置accessKeyId："+accessKeyId);
+        //System.out.println("阿里云配置accessKeySecret："+accessKeySecret);
+        //System.out.println("阿里云配置bucketName："+bucketName);
         // 设置URL过期时间为10年  3600l* 1000*24*365*10
         Date expiration = new Date(System.currentTimeMillis() + 3600L * 1000 * 24 * 365 * 10);
         // 生成URL
         URL url = client.generatePresignedUrl(bucketName, key, expiration);
         if (url != null) {
-            System.out.println("阿里云可访问路径："+url.toString());
+            //System.out.println("阿里云可访问路径："+url.toString());
             return url.toString();
         }
         return null;

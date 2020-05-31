@@ -17,4 +17,8 @@ public interface IPersonService extends IService<Person> {
     String getPersonById(String personId);
 
     Object update(String personId);
+
+    Object updateByThrows(String personId)throws Exception;
+
+    Object testThrowsAndTryCatch(String personId)throws Exception;
 }

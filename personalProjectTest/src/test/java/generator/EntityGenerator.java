@@ -25,10 +25,11 @@ public class EntityGenerator {
     @Test
     public void entityGenerator() {
         AutoGenerator mpg = new AutoGenerator();
+        //F:\personalDemoCode\personalProjectTest\src\main\java
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("F:\\personalDemo\\personalProjectTest\\src\\main\\java");//这里写你自己的java目录
+        gc.setOutputDir("F:\\personalDemoCode\\personalProjectTest\\src\\main\\java");//这里写你自己的java目录
         //gc.setOutputDir("D:\\zlpgcode\\zlpg\\guns-admin\\src\\main\\java\\");//这里写你自己的java目录
         gc.setFileOverride(true);//是否覆盖
         gc.setActiveRecord(true);
@@ -49,17 +50,18 @@ public class EntityGenerator {
 //                return super.processTypeConvert(fieldType);
 //            }
 //        });
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
+        //dsc.setDriverName("com.mysql.cj.jdbc.Driver");
+        dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("123456");
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/yongli_database?serverTimezone=UTC&characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/test?serverTimezone=UTC&characterEncoding=utf8");
         mpg.setDataSource(dsc);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
 //        strategy.setTablePrefix(new String[]{"temporaryProjectdocs"});// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] { "city_name" }); // 需要生成的表
+        strategy.setInclude(new String[] { "aliyun_file" }); // 需要生成的表
         // 排除生成的表
         // strategy.setInclude(new String[]{"activiti_task_node", "act_evt_log", " act_ge_bytearray", " act_ge_property", " act_hi_actinst", " act_hi_attachment", " act_hi_comment", " act_hi_detail", " act_hi_identitylink", " act_hi_procinst", " act_hi_taskinst", " act_hi_varinst", " act_id_bytearray", " act_id_group", " act_id_info", " act_id_membership", " act_id_priv", " act_id_priv_mapping", " act_id_property", " act_id_token", " act_id_user", " act_procdef_info", " act_re_deployment", " act_re_model", " act_re_procdef", " act_ru_deadletter_job", " act_ru_event_subscr", " act_ru_execution", " act_ru_history_job", " act_ru_identitylink", " act_ru_job", " act_ru_suspended_job", " act_ru_task", " act_ru_timer_job", " act_ru_variable"});
         mpg.setStrategy(strategy);

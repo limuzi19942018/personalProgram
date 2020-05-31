@@ -171,4 +171,10 @@ public class TestDemo {
         String finalName = String.valueOf(new Date().getTime()) +"_"+ prefix + "." + fileSufix;
         System.out.println(finalName);
     }
+
+    @Test
+    public void testRuntime(){
+        int number = Runtime.getRuntime().availableProcessors();
+        System.out.println(number);
+    }
 }
