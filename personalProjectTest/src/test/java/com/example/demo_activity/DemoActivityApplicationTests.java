@@ -143,14 +143,14 @@ public   class DemoActivityApplicationTests {
 		ActivitiUtils.completeEmployeeTask(task,variables);
 	}
 
-	@Test
+	/*@Test
 	public void testUpload(){
 		String filePath="C:\\Users\\Lenovo\\Desktop\\哈哈.txt";
 		UploadFileUtils fileUtil=new UploadFileUtils();
 		byte[] bytes = fileUtil.getBytes(filePath);
-		fileUtil.httpPost(bytes,"哈哈.txt");
+		//fileUtil.httpPost(bytes,"哈哈.txt");
 		//fileUtil.testSocekt(filePath);
-	}
+	}*/
 
 	@Test
 	public void testRedis(){

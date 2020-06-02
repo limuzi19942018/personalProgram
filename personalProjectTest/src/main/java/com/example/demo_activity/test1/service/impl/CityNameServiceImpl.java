@@ -53,6 +53,7 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
         CityName cityName = iCityNameService.selectById(cityId);
         CityName cityname = iCityNameService.selectOne(new EntityWrapper<CityName>().eq("id", "1"));
         String city = cityname.getCity();
+        stringRedisTemplate.opsForValue().set("city",city);
         System.out.println("名字是"+city);
         return cityname;
     }

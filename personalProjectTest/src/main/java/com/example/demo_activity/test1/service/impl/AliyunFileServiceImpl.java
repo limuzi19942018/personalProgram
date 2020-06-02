@@ -92,7 +92,6 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
             };
             Future<Integer> submit = pool.submit(task);
             futures.add(submit);
-
         }
         //关闭线程池
         pool.shutdown();
@@ -140,32 +139,16 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
             final List<File> newFiles = files;
             Runnable runnable = new Runnable() {
                 @Override
-                public void run() {
-                    uploadFileToAli(newFiles, aliFileList);
-                }
+                public void run() { uploadFileToAli(newFiles, aliFileList); }
             };
-            /*Runnable task=()->
-            {
-                uploadFileToAli(newFiles, aliFileList);
-            };*/
             Thread thread = new Thread(runnable);
             thread.start();
-            /*try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
+            //thread.join();
         }
         long end1 = System.currentTimeMillis();
         LOGGER.info("当前集合的长度是:{}", aliFileList.size());
-        //休眠
-        /*try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         while (true) {
-            if (aliFileList.size() == 111) {
+            if (String.valueOf(fileList.size()).equals(String.valueOf(aliFileList.size()))) {
                 break;
             } else {
                 try {
@@ -177,6 +160,7 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
         }
         LOGGER.info("上传操作耗时:{}s", (end1 - start1) / 1000);
         long start2 = System.currentTimeMillis();
+        //主线程进行插入操作
         this.insertBatch(aliFileList);
         long end2 = System.currentTimeMillis();
         LOGGER.info("插入操作耗时:{}s", (end2 - start2) / 1000);
