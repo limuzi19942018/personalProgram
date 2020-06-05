@@ -199,7 +199,7 @@ public class PersonController {
     }
 
     public static void main(String[] args) {
-        downloadAliyunFile("https://limuzi-aliyun-2020.oss-cn-beijing.aliyuncs.com/office插件安装包.zip",
+        downloadAliyunFile("https://cailian-evaluation-test.oss-cn-beijing.aliyuncs.com/template/combination/zip/1591086471232/信托业.zip",
                 "C:\\Users\\Lenovo\\Desktop\\code");
     }
 }

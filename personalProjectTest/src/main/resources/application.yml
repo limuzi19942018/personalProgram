@@ -18,7 +18,7 @@ spring:
     #db-name: test
     url: jdbc:mysql://49.232.161.254:3306/test?serverTimezone=UTC&allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: root
-    password: 123456
+    password: liyong123456
     db-name: test
     driver-class-name: com.mysql.jdbc.Driver
   redis:
@@ -40,20 +40,14 @@ spring:
       max-file-size: 500MB   #单个文件大小
       max-request-size: 2000MB #总上传的数据大小
 #阿里云上传
-aliyun:
-  endpoint: oss-cn-beijing.aliyuncs.com
-  access-id: LTAI4Ff8JDEGbdotaX4QLMWR
-  access-key: aYGfLgfk1ZxoiJu9UlkvPSyaHBcoAJ
-  bucket: limuzi-aliyun-2020
-  dir: lyFile/
-  server-path: c:/lyFile
+
 
 #多数据源
 test:
   datasource:
     url: jdbc:mysql://49.232.161.254:3306/yongli_database?serverTimezone=UTC&allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: root
-    password: 123456
+    password: liyong123456
     db-name: yongli_database
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis-plus:

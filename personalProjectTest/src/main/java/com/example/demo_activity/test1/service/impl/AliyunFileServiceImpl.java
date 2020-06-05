@@ -170,8 +170,8 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
         if (fileList != null) {
             long start1 = System.currentTimeMillis();
             for (File file : fileList) {
-                String realPath = "reportTemplate" + File.separator + String.valueOf(System.currentTimeMillis());
-                String aliPath = realPath + File.separator + file.getName();
+                String realPath = "reportTemplate" + "/" + String.valueOf(System.currentTimeMillis());
+                String aliPath = realPath + "/"+ file.getName();
                 //上传到阿里云oss
                 try {
                     AliYunUploadFile.uploadFile(file.getAbsolutePath(), aliPath);
