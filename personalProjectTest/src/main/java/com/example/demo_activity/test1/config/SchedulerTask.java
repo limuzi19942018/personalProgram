@@ -13,7 +13,7 @@ public class SchedulerTask {
 
         private int count=0;
 
-        @Scheduled(cron="*/20 * * * * ?")
+        //@Scheduled(cron="*/20 * * * * ?")
         private void process(){
             //System.out.println("this is scheduler task runing  "+(count++));
             CityName cityNameById = cityNameService.getCityNameById("2");

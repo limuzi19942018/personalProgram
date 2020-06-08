@@ -11,15 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -39,7 +41,10 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
     @Override
     public SuccessTip uploadFile(MultipartFile file) throws Exception {
         ArrayList<File> fileList = new ArrayList<>();
+        long start = System.currentTimeMillis();
         FileUtils.zipDecompression(file, fileList);
+        long end = System.currentTimeMillis();
+        LOGGER.info("解压压缩包时间耗时:{}s", (end - start) / 1000);
         //采用单个线程一个个上传文件，上传111个文件大概需要12s左右
         //zipHandleTemplate(fileList);
         //采用多线程上传（采用的是实现Runnable的方式），上传111个文件大概需要6s左右
@@ -139,7 +144,9 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
             final List<File> newFiles = files;
             Runnable runnable = new Runnable() {
                 @Override
-                public void run() { uploadFileToAli(newFiles, aliFileList); }
+                public void run() {
+                    uploadFileToAli(newFiles, aliFileList);
+                }
             };
             Thread thread = new Thread(runnable);
             thread.start();
@@ -171,7 +178,7 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
             long start1 = System.currentTimeMillis();
             for (File file : fileList) {
                 String realPath = "reportTemplate" + "/" + String.valueOf(System.currentTimeMillis());
-                String aliPath = realPath + "/"+ file.getName();
+                String aliPath = realPath + "/" + file.getName();
                 //上传到阿里云oss
                 try {
                     AliYunUploadFile.uploadFile(file.getAbsolutePath(), aliPath);
@@ -248,5 +255,121 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 多文件上传用的io模式
+     *
+     * @param files
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public SuccessTip multiUploadFile(List<MultipartFile> files) {
+        //封装一个方法
+        return copyFileByIo(files);
+    }
+
+    private SuccessTip copyFileByIo(List<MultipartFile> files) {
+        long start = System.currentTimeMillis();
+        for (MultipartFile file : files) {
+            //获取文件的名称
+            String originalFilename = file.getOriginalFilename();
+            //拼接要保存的文件路径
+            String destinationPath = "E:\\destination" + File.separator + originalFilename;
+            File destinationFile = new File(destinationPath);
+            try {
+                file.transferTo(destinationFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new SuccessTip(1, "上传失败", null);
+            }
+        }
+        long end = System.currentTimeMillis();
+        LOGGER.info("多文件上传耗时:{}s,起始时间是:{},截止时间是:{}", (end - start) / 1000, start, end);
+        return new SuccessTip("上传成功");
+    }
+
+
+    /**
+     * 多文件上传用的是NIO模式
+     *
+     * @param files
+     * @return
+     */
+    @Transactional
+    @Override
+    public SuccessTip multiUploadFileByNIO(List<MultipartFile> files) {
+        //封装一个方法
+        return copyFileByNio(files);
+    }
+
+    private SuccessTip copyFileByNio(List<MultipartFile> files) {
+        long start = System.currentTimeMillis();
+        for (MultipartFile file : files) {
+            String originalFilename = file.getOriginalFilename();
+            String destinationPath = "E:\\destination" + File.separator + originalFilename;
+            FileInputStream fis = null;
+            FileOutputStream fos = null;
+            FileChannel inChannel = null;
+            FileChannel outChannel = null;
+            try {
+                //FileInputStream继承了FileInputStream，所以可以强转（父转子，类似于Object转String）
+                fis = (FileInputStream) file.getInputStream();
+                fos = new FileOutputStream(new File(destinationPath));
+                inChannel = fis.getChannel();
+                outChannel = fos.getChannel();
+         /*   int capacity = 1024;
+            ByteBuffer buffer = ByteBuffer.allocate(capacity);
+            while (true) {
+                buffer.clear();
+                if (inChannel.read(buffer) != -1) {
+                    break;
+                }
+                buffer.flip();
+                outChannel.write(buffer);
+            }*/
+                //inChannel.transferTo的方法类似于上面的方法，只不过底层实现了read方法
+                inChannel.transferTo(0, inChannel.size(), outChannel);
+            } catch (Exception e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new SuccessTip(1, "上传失败", null);
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (inChannel != null) {
+                    try {
+                        inChannel.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (outChannel != null) {
+                    try {
+                        outChannel.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }
+        long end = System.currentTimeMillis();
+        LOGGER.info("多文件上传耗时:{}s,起始时间是:{},截止时间是:{}", (end - start) / 1000, start, end);
+        return new SuccessTip("上传成功");
     }
 }

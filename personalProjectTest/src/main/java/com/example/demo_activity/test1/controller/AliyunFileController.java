@@ -11,6 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 /**
  * <p>
  * 阿里云存放文件表 前端控制器
@@ -39,6 +43,30 @@ public class AliyunFileController {
             e.printStackTrace();
             return new SuccessTip("上传失败");
         }
+    }
+
+    /**
+     * 上传文件到本地保存
+     * @param files
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/multiUploadFile", method = RequestMethod.POST)
+    public Object multiUploadFile(List<MultipartFile> files, HttpServletRequest request) {
+        if (files.isEmpty()) {
+            return new SuccessTip(1, "文件不能为空", null);
+        }
+        return iAliyunFileService.multiUploadFile(files);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/multiUploadFileByNIO", method = RequestMethod.POST)
+    public Object multiUploadFileByNIO(List<MultipartFile> files, HttpServletRequest request) {
+        if (files.isEmpty()) {
+            return new SuccessTip(1, "文件不能为空", null);
+        }
+        return iAliyunFileService.multiUploadFileByNIO(files);
     }
 }
 

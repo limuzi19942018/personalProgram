@@ -198,9 +198,41 @@ public class PersonController {
         }
     }
 
+    public static void downloadAliyunFileByNio(String urlPath, String downloadDir) {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            fis = new FileInputStream(urlPath);
+            fos = new FileOutputStream(downloadDir);
+            try {
+                byte[] bytes = new byte[2048];
+                int i;
+                while ((i = fis.read(bytes)) != -1) {
+                    fos.write(bytes, 0, i);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (fis != null){
+                        fis.close();
+                    }
+                    if (fos != null){
+                        fos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static void main(String[] args) {
-        downloadAliyunFile("https://cailian-evaluation-test.oss-cn-beijing.aliyuncs.com/template/combination/zip/1591086471232/信托业.zip",
-                "C:\\Users\\Lenovo\\Desktop\\code");
+        //downloadAliyunFile("https://cailian-evaluation-test.oss-cn-beijing.aliyuncs.com/template/combination/zip/1591350238433/信托业.zip","C:\\Users\\Lenovo\\Desktop\\code");
+        downloadAliyunFileByNio("E:\\业务文件夹\\home_zlpg\\1_2月份工作计划.xls","C:\\Users\\Lenovo\\Desktop\\code\\22.xls");
     }
 }
 
