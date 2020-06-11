@@ -9,7 +9,7 @@ flowable:
 server:
   port: 8091
 elasticsearch:
-  ip: 127.0.0.1
+  ip: 192.168.0.1
   port: 9300
   cluster.name: my-application
 spring:
@@ -43,6 +43,7 @@ spring:
     multipart:
       max-file-size: 500MB   #单个文件大小
       max-request-size: 2000MB #总上传的数据大小
+#阿里云上传
 
 
 
