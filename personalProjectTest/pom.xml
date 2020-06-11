@@ -90,10 +90,11 @@
             <version>1.1.6</version>
         </dependency>
         <!--alibaba-->
-        <!--<dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-        </dependency>-->
+            <version>1.2.39</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

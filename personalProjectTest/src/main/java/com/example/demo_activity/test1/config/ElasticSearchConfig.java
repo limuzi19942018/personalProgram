@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import java.net.InetAddress;
 
 /**
- * @Author: yongl
+ * @Author: yongli
  * @DATE: 2020/6/8 17:54
  */
 
@@ -40,9 +40,8 @@ public class ElasticSearchConfig {
 
 
     /**
-     * Bean name default  函数名字
      *
-     * @return
+     * @return TransportClient
      */
     @Bean(name = "transportClient")
     public TransportClient transportClient() {
