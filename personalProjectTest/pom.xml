@@ -160,6 +160,17 @@
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
         </dependency>
+        <!---->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+        <!--mogodb-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
         <!--阿里云下载-->
         <!-- 阿里云文件上传下载-->
         <dependency>
@@ -199,6 +210,10 @@
                     <artifactId>elasticsearch</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
         </dependency>
     </dependencies>
     <build>
