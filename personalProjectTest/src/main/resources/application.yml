@@ -8,15 +8,6 @@ flowable:
   #database-schema-update: true
 server:
   port: 8091
-elasticsearch:
-  ip: 127.0.0.1
-  port: 9300
-  cluster.name: elasticsearch
-mongodb:
-  host: 127.0.0.1
-  port: 27017
-  #mongo数据库名
-  database: ceshi_database
 spring:
   aop:
     proxy-target-class: true #false为启用jdk默认动态代理,true为cglib动态代理
@@ -25,20 +16,12 @@ spring:
     username: root
     password: 123456
     db-name: test
-    #url: jdbc:mysql://49.232.161.254:3306/test?serverTimezone=UTC&allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
-    #username: root
-    #password: liyong123456
-    #db-name: test
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     host: 127.0.0.1
-    #host: 49.232.161.254
     port: 6379
     database: 5
-    # redis暂时没有密码
-    #password: test_123456
-    #阿里云的redis密码
-    #password: root
+    password: test_123456
     timeout: 5000
     pool:
       max-idle: 8
@@ -49,22 +32,13 @@ spring:
       max-file-size: 500MB   #单个文件大小
       max-request-size: 2000MB #总上传的数据大小
 #阿里云上传
-aliyun:
-  endpoint: oss-cn-beijing.aliyuncs.com
-  access-id: LTAI4Ff8JDEGbdotaX4QLMWR
-  access-key: aYGfLgfk1ZxoiJu9UlkvPSyaHBcoAJ
-  bucket: limuzi-aliyun-2020
-  dir: lyFile/
-  server-path: c:/lyFile
 
 
 #多数据源
 test:
   datasource:
-    #url: jdbc:mysql://49.232.161.254:3306/yongli_database?serverTimezone=UTC&allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
     url: jdbc:mysql://127.0.0.1:3306/yongli_database?serverTimezone=UTC&allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: root
-    #password: liyong123456
     password: 123456
     db-name: yongli_database
     driver-class-name: com.mysql.cj.jdbc.Driver
