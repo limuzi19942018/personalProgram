@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo_activity.test1.dao.TemplateCombinationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.demo_activity.test1.model.TemplateCombination">
+        <id column="id" property="id" />
+        <result column="tem_combination_name" property="temCombinationName" />
+        <result column="combination_lable_name" property="combinationLableName" />
+        <result column="combination_describe" property="combinationDescribe" />
+        <result column="combination_picture_path" property="combinationPicturePath" />
+        <result column="basic_template_id" property="basicTemplateId" />
+        <result column="income_template_id" property="incomeTemplateId" />
+        <result column="market_template_id" property="marketTemplateId" />
+        <result column="report_template_id" property="reportTemplateId" />
+        <result column="desc_template_id" property="descTemplateId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="set_userName" property="setUsername" />
+        <result column="combination_status" property="combinationStatus" />
+        <result column="combination_zip_path" property="combinationZipPath" />
+        <result column="version" property="version" />
+        <result column="framework_zip_path" property="frameworkZipPath" />
+        <result column="version_zip" property="versionZip" />
+        <result column="desc_style_id" property="descStyleId" />
+        <result column="report_style_id" property="reportStyleId" />
+    </resultMap>
+
+</mapper>

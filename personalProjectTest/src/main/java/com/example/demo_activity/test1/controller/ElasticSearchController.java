@@ -2,14 +2,15 @@ package com.example.demo_activity.test1.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo_activity.test1.config.ElasticsearchUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @Author: yongl
@@ -56,5 +57,49 @@ public class ElasticSearchController {
         jsonObject.put("date", new Date());
         String id = ElasticsearchUtil.addData(jsonObject, indexName, esType, jsonObject.getString("id"));
         return id;
+    }
+
+    /**
+     * 获取数据
+     * @param id 一条数据的id
+     * @param indexName 索引名称（类似于mysql库名）
+     * @param esType 类型（类属于mysql的表名）
+     * @return 结果集
+     */
+    @PostMapping("/getData")
+    @ResponseBody
+    public String getData(String id,String indexName,String esType){
+        if(StringUtils.isNotBlank(id)) {
+            Map<String, Object> map= ElasticsearchUtil.searchDataById(indexName,esType,id,null);
+            return JSONObject.toJSONString(map);
+        }
+        else{
+            return "id为空";
+        }
+    }
+
+
+    /**
+     *
+        @param id 一条数据的id
+      * @param indexName 索引名称（类似于mysql库名）
+     * @param esType 类型（类属于mysql的表名）
+     * @return 结果集
+     */
+    @PostMapping("/update")
+    @ResponseBody
+    public String update(String id,String indexName,String esType) {
+        if(StringUtils.isNotBlank(id)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", id);
+            jsonObject.put("age", 31);
+            jsonObject.put("name", "修改");
+            jsonObject.put("date", new Date());
+            ElasticsearchUtil.updateDataById(jsonObject, indexName, esType, id);
+            return "id=" + id;
+        }
+        else{
+            return "id为空";
+        }
     }
 }

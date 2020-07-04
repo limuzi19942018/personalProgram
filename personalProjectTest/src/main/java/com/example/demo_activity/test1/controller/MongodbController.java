@@ -30,7 +30,7 @@ public class MongodbController {
         cityName.setId(12);
         cityName.setCity("河南");
         //mongoTemplate.save(cityName);
-        mongoTemplate.insert(cityName);
+        mongoTemplate.save(cityName);
         return new SuccessTip("插入成功");
 
     }

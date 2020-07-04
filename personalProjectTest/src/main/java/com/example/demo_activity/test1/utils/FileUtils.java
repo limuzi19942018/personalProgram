@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
 import java.util.zip.ZipFile;
 
 /**
@@ -830,7 +831,7 @@ public class FileUtils {
         }*/
 
 
-    public static void zipDecompression(MultipartFile file, List<File> list)throws Exception {
+    public static void zipDecompression(MultipartFile file, List<File> list) throws Exception {
         //创建临时文件夹解压文件
         String fileName = file.getOriginalFilename();
         //创建临时路径存放解压后的文件
@@ -852,88 +853,89 @@ public class FileUtils {
         if (!fileDir.exists()) {
             fileDir.mkdirs();
         }
-        File saveFile = new File(fileDir, fileName);//将压缩包解析到指定位置
-        try {
-            file.transferTo(saveFile);
-            String newFilePath = tempZipFileUrl + File.separator + fileName;
-            File zipFile = new File(newFilePath);
-            //unZipFiles(zipFile, tempDestinationFileUrl, list);//解压文件，获取文件路径
-            unZipFiles(saveFile, tempDestinationFileUrl, list);//解压文件，获取文件路径
-            //删除存放压缩包的临时文件夹
-            //FileUtils.deleteFile(tempZipFileUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("解压执行失败");
-            throw new IOException("解压执行失败");
-        }
+        //将压缩包解析到指定位置
+        File saveFile = new File(fileDir, fileName);
+        file.transferTo(saveFile);
+        //解压文件，获取文件路径
+        unZipFiles(saveFile, tempDestinationFileUrl, list);
+        //删除存放压缩包的临时文件夹
+        //FileUtils.deleteFile(tempZipFileUrl);
         //程序结束时，删除临时文件
-        deleteFiles(tempZipFileUrl);//删除压缩包文件夹
+        //deleteFiles(tempZipFileUrl);//删除压缩包文件夹
         //deleteFiles(tempDestinationFileUrl);//删除解压文件夹**
     }
+
     public static String getTempZipFileUrl() {
         String yyyyMmStr = DateUtils.formatDate(new Date(), "yyyy-MM");
-        return "tem_zip" + File.separator + yyyyMmStr;
-    }
-    public static String getTempDestinationFileUrl() {
-        String yyyyMmStr = DateUtils.formatDate(new Date(), "yyyy-MM");
-        return "tem_des" + File.separator + yyyyMmStr;
+        return "tem_zip" + File.separator + String.valueOf(System.currentTimeMillis());
     }
 
-    private static void unZipFiles(File srcFile, String destDirPath, List<File> list) {
+    public static String getTempDestinationFileUrl() {
+        String yyyyMmStr = DateUtils.formatDate(new Date(), "yyyy-MM");
+        return "tem_des" + File.separator + String.valueOf(System.currentTimeMillis());
+    }
+
+    private static void unZipFiles(File srcFile, String destDirPath, List<File> list) throws Exception {
         // 判断源文件是否存在
         if (!srcFile.exists()) {
             throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
         }
         // 开始解压
         ZipFile zipFile = null;
-        try {
-            //编码不设置的话，报java.lang.IllegalArgumentException: MALFORMED异常
-            zipFile = new ZipFile(srcFile, Charset.forName("GBK"));
-            Enumeration<?> entries = zipFile.entries();
-            while (entries.hasMoreElements()) {
-                java.util.zip.ZipEntry entry = (java.util.zip.ZipEntry) entries.nextElement();
-                // 如果是文件夹，就创建个文件夹
-                if (entry.isDirectory()) {
-                    String dirPath = destDirPath + "/" + entry.getName();
-                    File dir = new File(dirPath);
-                    dir.mkdirs();
-                    File[] files = dir.listFiles();
-                    for (File file : files) {
-                        //System.out.println("名称" + file.getName() + "---路径" + file.getAbsolutePath());
-                        list.add(file);
-                    }
-                } else {
-                    // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
-                    File targetFile = new File(destDirPath + "/" + entry.getName());
-                    // 保证这个文件的父文件夹必须要存在
-                    //System.out.println("名称" + targetFile.getName() + "---路径" + targetFile.getAbsolutePath());
-                    list.add(targetFile);
-                   /* if(!targetFile.getParentFile().exists()){
-                    }*/
-                    targetFile.createNewFile();
-                    // 将压缩文件内容写入到这个文件中
-                    InputStream is = zipFile.getInputStream(entry);
-                    FileOutputStream fos = new FileOutputStream(targetFile);
-                    int len;
-                    byte[] buf = new byte[1024];
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                    }
-                    // 关流顺序，先打开的后关闭
-                    fos.close();
-                    is.close();
+        //编码不设置的话，报java.lang.IllegalArgumentException: MALFORMED异常
+        zipFile = new ZipFile(srcFile, Charset.forName("GBK"));
+        Enumeration<?> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            java.util.zip.ZipEntry entry = (java.util.zip.ZipEntry) entries.nextElement();
+            // 如果是文件夹，就创建个文件夹
+            if (entry.isDirectory()) {
+                String dirPath = destDirPath + "/" + entry.getName();
+                File dir = new File(dirPath);
+                dir.mkdirs();
+            } else {
+                //获取文件前缀
+                /*String filePrefix = entry.getName().substring(0, entry.getName().lastIndexOf("."));
+                //获取文件后缀
+                String fileSuffix = entry.getName().substring(entry.getName().lastIndexOf(".") + 1);
+                //拼接唯一标示文件名称
+                String fileName = String.valueOf(System.currentTimeMillis()) + "_" + filePrefix + "." + fileSuffix;*/
+                // 保证这个文件的父文件夹必须要存在
+                //System.out.println("名称" + targetFile.getName() + "---路径" + targetFile.getAbsolutePath());
+                String prefix="";
+                String trueName=entry.getName();
+                String fileSuffix = entry.getName().substring(entry.getName().lastIndexOf(".") + 1);
+                if( entry.getName().contains("/")){
+                     prefix = entry.getName().substring(0, entry.getName().lastIndexOf("/"))+"/";
+                     trueName = entry.getName().substring(entry.getName().lastIndexOf("/") + 1);
                 }
+                //String ossPath = exPath + UUID.randomUUID().toString().replace("-", "") + "." + fileSuffix;
+                // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
+                //File targetFile = new File(destDirPath +"/"+ entry.getName());
+                File targetFile = new File(destDirPath +"/"+ prefix+UUID.randomUUID().toString().replace("-", "") + "."+fileSuffix);
+                list.add(targetFile);
+                if (!targetFile.getParentFile().exists()) {
+                    targetFile.getParentFile().mkdirs();
+                }
+                targetFile.createNewFile();
+                // 将压缩文件内容写入到这个文件中
+                InputStream is = zipFile.getInputStream(entry);
+                FileOutputStream fos = new FileOutputStream(targetFile);
+                int len;
+                byte[] buf = new byte[1024];
+                while ((len = is.read(buf)) != -1) {
+                    fos.write(buf, 0, len);
+                }
+                // 关流顺序，先打开的后关闭
+                fos.close();
+                is.close();
             }
-        } catch (Exception e) {
-            //throw new RuntimeException("unzip error from ZipUtils", e);
-            e.printStackTrace();
-        } finally {
-            if (zipFile != null) {
-                try {
-                    zipFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        }
+        //throw new RuntimeException("unzip error from ZipUtils", e);
+        if (zipFile != null) {
+            try {
+                zipFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -963,4 +965,73 @@ public class FileUtils {
         file.delete();
     }
 
+    /**
+     * 删除某个文件夹路径下所有文件
+     * @param path
+     * @return
+     */
+    public static  boolean delAllFile(String path) {
+        boolean flag = false;
+        File file = new File(path);
+        if (!file.exists()) {
+            return flag;
+        }
+        if (!file.isDirectory()) {
+            return flag;
+        }
+        String[] tempList = file.list();
+        File temp = null;
+        for (int i = 0; i < tempList.length; i++) {
+            if (path.endsWith(File.separator)) {
+                temp = new File(path + tempList[i]);
+            } else {
+                temp = new File(path + File.separator + tempList[i]);
+            }
+            if (temp.isFile()) {
+                boolean delete = temp.delete();
+            }
+            if (temp.isDirectory()) {
+                delAllFile(path + "/" + tempList[i]);// 先删除文件夹里面的文件
+                delFolder(path + "/" + tempList[i]);// 再删除空文件夹
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 删除某个文件（或者文件夹）
+     * @param file
+     */
+    public static void deleteFile2(File file) {
+        if (file.exists()) {
+            if (file.isFile()) {
+                file.delete();
+            } else if (file.isDirectory()) {
+                File files[] = file.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    deleteFile(files[i]);
+                }
+            }
+            file.delete();
+        } else {
+            System.out.println("所删除的文件不存在！" + '\n');
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        //delAllFile("C:\\lyFile");
+        //File file = new File("C:\\lyFile\\tem_des\\22");
+        //deleteFile2(file);
+        //String fileSuffix = "22/11.doc".substring("22/11.doc".lastIndexOf("/") + 1);
+        //System.out.println(fileSuffix);
+        //try {
+            int a=1/0;
+       /* }catch (Exception e){
+            System.out.println("11");
+            e.printStackTrace();
+            throw  new Exception("33");
+        }*/
+        System.out.println("333");
+    }
 }

@@ -50,7 +50,7 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
         //采用多线程上传（采用的是实现Runnable的方式），上传111个文件大概需要6s左右
         //threadMethod(fileList);
         //采用多线程上传（采用Callable的方式），上传111个文件大概需要3.5秒左右
-        threadByCallable(fileList);
+        //threadByCallable(fileList);
         return new SuccessTip("上传成功");
     }
 

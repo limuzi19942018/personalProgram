@@ -467,5 +467,14 @@ public class ObjectUtils {
         }
         return  "";
     }
+    public static <T> List<T> deepCopy(List<T> src,List<T> des) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
 
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        des = (List<T>) in.readObject();
+        return des;
+    }
 }

@@ -3,7 +3,6 @@ package com.example.demo_activity.test1.config;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo_activity.test1.page.ElasticSearchPage;
-import com.example.demo_activity.test1.utils.ObjectUtils;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
@@ -319,7 +318,7 @@ public class ElasticsearchUtil {
      * @param highlightField
      */
     private static List<Map<String, Object>> setSearchResponse(SearchResponse searchResponse, String highlightField) {
-        List<Map<String, Object>> sourceList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> sourceList = new ArrayList();
         StringBuffer stringBuffer = new StringBuffer();
 
         for (SearchHit searchHit : searchResponse.getHits().getHits()) {
