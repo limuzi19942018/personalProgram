@@ -44,4 +44,22 @@ public interface IMongodbService {
      * @return 返回结果集
      */
     SuccessTip findCollectionData();
+
+    /**
+     * 查询mongodb中的collection集合数据(自定义指定数据库)
+     * @return 返回结果集
+     */
+    SuccessTip findDataByCustom();
+
+    /**
+     * 根据条件删除集合中的数据
+     * @return 返回结果集
+     */
+    SuccessTip deleteData();
+
+    /**
+     * 自定义创建一个集合
+     * @return 返回结果集
+     */
+    SuccessTip createCollection();
 }

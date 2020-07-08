@@ -3,8 +3,12 @@ package com.example.demo_activity.test1.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo_activity.test1.model.CityName;
+import com.example.demo_activity.test1.model.Person;
 import com.example.demo_activity.test1.service.IMongodbService;
 import com.example.demo_activity.test1.tips.SuccessTip;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+import com.mongodb.WriteResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,10 +134,64 @@ public class MongodbServiceImpl implements IMongodbService {
     public SuccessTip findCollectionData() {
         //构建查询条件对象
         Query query = Query.query(Criteria.where("city").is("定远"));
+        //方式一查询：根据查询条件query,返回实例的class文件，集合名称
         List<Map> cityNames = mongoTemplate.find(query, Map.class,"cityName");
-        for (Map map : cityNames) {
-            LOGGER.info("cityName为:{}",map.get("city").toString());
-        }
+        //方式二：只需根据返回实例的class文件，和结合名称，查询所有
+        List<JSONObject> all = mongoTemplate.findAll(JSONObject.class,"cityName");
+        //方式三：findByid,这里面的id指的是mongodb为我们生成的一个objectId
+        Map map = mongoTemplate.findById("5f0421932d757613602fa658", Map.class,"cityName");
+        //看能否在一个方法里面切换数据库(下行代码的person时属于我ceshi_database数据库的，
+        // 上面cityname是属于我test数据库的，最后发现在同一方法里面如果要跨库查询，需要手动切换数据库)
+        Map map2 = mongoTemplate.findById("5efb14aa1e67deabcf511918", Map.class,"person"); //查询出的结果为null,因为没有切换数据库
+        LOGGER.info("集合长度为:{}",map2.size());
         return new SuccessTip("查询成功");
+    }
+
+
+    /**
+     * 查询mongodb中的collection集合数据(自定义指定数据库)
+     * @return 返回结果集
+     */
+    @Override
+    public SuccessTip findDataByCustom() {
+        //自定义指定一个mongodb的模板（可以自己指定数据库）
+        MongoTemplate mongoTemplate_custom = new MongoTemplate(new MongoClient(), "ceshi_database");
+        //aggregate聚合函数
+        //mongoTemplate_custom.aggregate()
+        //查询
+        List<JSONObject> list = mongoTemplate_custom.findAll(JSONObject.class, "person");
+        //根据id来查询(一定要记住这个id参数是mongodb里面的objectId,entiyClass是Map)
+        Map person = mongoTemplate_custom.findById("5efb14aa1e67deabcf511918", Map.class, "person");
+        LOGGER.info("集合长度为:{}", person.size());
+        return null;
+    }
+
+
+    /**
+     * 根据条件删除集合中的数据
+     * @return 返回结果集
+     */
+    @Override
+    public SuccessTip deleteData() {
+        Query query = Query.query(Criteria.where("city").is("定远"));
+        //根据条件删除(先查询再删除)
+        WriteResult cityName = mongoTemplate.remove(query, "cityName");
+        System.out.println(cityName.toString());
+        return new SuccessTip("删除成功");
+    }
+
+
+    /**
+     * 自定义创建一个集合
+     * @return 返回结果集
+     */
+    @Override
+    public SuccessTip createCollection() {
+        //先自定义一个mongodb连接（确定数据库）
+        MongoTemplate mongoTemplate_custom = new MongoTemplate(new MongoClient(), "ceshi_database");
+        DBCollection product = mongoTemplate_custom.createCollection("product");
+        System.out.println(product.toString());
+        //打印结果为DBCollection{database=DB{name='ceshi_database'}, name='product'}
+        return new SuccessTip("创建集合成功");
     }
 }

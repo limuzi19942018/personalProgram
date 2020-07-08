@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/mongodb")
 public class MongodbController {
 
+    /**
+     * mongodb的api地址：
+     * https://docs.spring.io/spring-data/mongodb/docs/current/api/org/springframework/data/mongodb/core/MongoTemplate.html
+     * (建议翻墙访问，速度更快)
+     */
+
 
 
     @Autowired
@@ -81,5 +87,35 @@ public class MongodbController {
     @ResponseBody
     public Object findCollectionData(){
         return iMongodbService.findCollectionData();
+    }
+
+    /**
+     * 查询mongodb中的collection集合数据(自定义指定数据库)
+     * @return 返回结果集
+     */
+    @PostMapping("/findDataByCustom")
+    @ResponseBody
+    public Object findDataByCustom(){
+        return iMongodbService.findDataByCustom();
+    }
+
+    /**
+     * 根据条件删除集合中的数据
+     * @return 返回结果集
+     */
+    @PostMapping("/deleteData")
+    @ResponseBody
+    public Object deleteData(){
+        return iMongodbService.deleteData();
+    }
+
+    /**
+     * 自定义创建一个集合
+     * @return 返回结果集
+     */
+    @PostMapping("/createCollection")
+    @ResponseBody
+    public Object createCollection(){
+        return iMongodbService.createCollection();
     }
 }
