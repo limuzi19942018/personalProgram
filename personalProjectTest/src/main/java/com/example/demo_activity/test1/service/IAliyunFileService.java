@@ -23,4 +23,6 @@ public interface IAliyunFileService extends IService<AliyunFile> {
     SuccessTip multiUploadFile(List<MultipartFile> files);
 
     SuccessTip multiUploadFileByNIO(List<MultipartFile> files);
+
+    SuccessTip uploadFileToOss(MultipartFile file);
 }

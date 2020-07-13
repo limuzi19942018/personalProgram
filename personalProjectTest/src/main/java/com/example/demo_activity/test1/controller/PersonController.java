@@ -8,6 +8,8 @@ import com.example.demo_activity.test1.tips.SuccessTip;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +37,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Controller
 @RequestMapping("/person")
 public class PersonController {
+    private final static Logger LOGGER = LoggerFactory.getLogger(PersonController.class);
+
     @Autowired
     private IPersonService iPersonService;
+
+
+
+    @ResponseBody
+    @PostMapping("/testHelloMethod")
+    public Object testHelloMethod(String message){
+        LOGGER.info(":{}",message);
+        return new SuccessTip(message);
+    }
 
     @ResponseBody
     @RequestMapping(value = "/getPersonById", method = RequestMethod.GET)

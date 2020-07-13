@@ -70,6 +70,43 @@ public class AliYunUploadFile {
         return 0;
     }
 
+    /**
+     * 根据名称上传
+     *
+     * @param pathUrl  上传的文件路径 （/home/zlpg/report/yyyyMM/0/operation/0/资产基础法.xls）
+     * @param filePath 要保存到阿里云的路径 （report/yyyyMM/0/operation/0/类型名称.xls）
+     * @param fileName 文件下载时候 文件名称 类型名称.xls
+     * @return
+     */
+    public static long uploadFileAndFileName(String pathUrl, String filePath,String fileName) throws IOException {
+        OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        PutObjectResult putObjectResult = null;
+        try {
+            putObjectResult = client.putObject(new PutObjectRequest(bucketName, filePath, new File(pathUrl)));
+            //获取文件大小
+            SimplifiedObjectMeta objectMeta = client.getSimplifiedObjectMeta(bucketName, filePath);
+            // 设置源文件与目标文件相同，调用ossClient.copyObject方法修改文件元信息。
+            CopyObjectRequest request = new CopyObjectRequest(bucketName, filePath,bucketName, filePath);
+            //创建上传Object的Metadata
+            ObjectMetadata metadata = client.getObjectMetadata(bucketName, filePath);
+            metadata.setContentDisposition("attachment; filename=\"" + fileName + "\"");
+            request.setNewObjectMetadata(metadata);
+            //修改元信息。
+            client.copyObject(request);
+            return (new Double(Math.floor(objectMeta.getSize())).longValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("异常信息为:{}",e.getMessage());
+            throw new IOException("上传失败",e);
+        } finally {
+            if(putObjectResult!=null&&putObjectResult.getCallbackResponseBody()!=null){
+                putObjectResult.getCallbackResponseBody().close();
+            }
+            client.shutdown();
+        }
+        //return 0;
+    }
+
 
     /**
      * 删除阿里云上的文件

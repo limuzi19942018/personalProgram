@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.example.demo_activity.test1.tips.SuccessTip;
 import com.example.demo_activity.test1.utils.AliYunUploadFile;
 import com.example.demo_activity.test1.utils.FileUtils;
+import com.example.demo_activity.test1.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
         //采用多线程上传（采用的是实现Runnable的方式），上传111个文件大概需要6s左右
         //threadMethod(fileList);
         //采用多线程上传（采用Callable的方式），上传111个文件大概需要3.5秒左右
-        //threadByCallable(fileList);
+        threadByCallable(fileList);
         return new SuccessTip("上传成功");
     }
 
@@ -370,6 +371,33 @@ public class AliyunFileServiceImpl extends ServiceImpl<AliyunFileMapper, AliyunF
         }
         long end = System.currentTimeMillis();
         LOGGER.info("多文件上传耗时:{}s,起始时间是:{},截止时间是:{}", (end - start) / 1000, start, end);
+        return new SuccessTip("上传成功");
+    }
+
+    @Override
+    public SuccessTip uploadFileToOss(MultipartFile file)  {
+        //获取文件名
+        String originalFilename = file.getOriginalFilename();
+        //获取文件夹路径
+        //创建临时路径存放解压后的文件
+        String tempDestinationFileUrl = FileUtils.getTempDestinationFileUrl();
+        //拼接盘符路径+后缀路径
+        tempDestinationFileUrl = AliYunUploadFile.getRealPath(tempDestinationFileUrl);
+        File dir = new File(tempDestinationFileUrl);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        try {
+            File saveFile = new File(dir, originalFilename);
+            file.transferTo(saveFile);
+            //获取本地文件的路径
+            String absolutePath = saveFile.getAbsolutePath();
+            //阿里云路径
+            String ossPath="report/template/"+ ObjectUtils.getShortUuid()+".docx";
+            AliYunUploadFile.uploadFileAndFileName(absolutePath,ossPath,originalFilename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return new SuccessTip("上传成功");
     }
 }

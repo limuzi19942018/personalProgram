@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo_activity.test1.service.IAliyunFileService;
 import com.example.demo_activity.test1.tips.SuccessTip;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -78,20 +79,13 @@ public class AliyunFileController {
         return iAliyunFileService.multiUploadFileByNIO(files);
     }
 
-    public static void main(String[] args) {
-       /* Map<String, Object> map = new HashMap<>();
-        Map<String, Object> retrunMap = new HashMap<>();
-        map.put("a",123);
-        map.put("b",123);
-        retrunMap.put("key",map);
-        String s = JSONObject.toJSONString(retrunMap);
-        System.out.println(s);*/
-       String str="中国,美国";
-       String ss="韩国,上海";
-        StringBuffer stringBuffer = new StringBuffer();
-         stringBuffer.append(str).append(",").append(ss);
-        System.out.println(stringBuffer.toString());
-
+    @ResponseBody
+    @PostMapping("/uploadFileToOss")
+    public Object uploadFileToOss(MultipartFile file){
+        if(file.isEmpty()){
+            return new SuccessTip(1,"文件不能为空",null);
+        }
+        return iAliyunFileService.uploadFileToOss(file);
     }
 }
 
