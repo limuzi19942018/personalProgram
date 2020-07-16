@@ -49,13 +49,7 @@ spring:
       max-file-size: 500MB   #单个文件大小
       max-request-size: 2000MB #总上传的数据大小
 #阿里云上传
-aliyun:
-  endpoint: oss-cn-beijing.aliyuncs.com
-  access-id: LTAI4Ff8JDEGbdotaX4QLMWR
-  access-key: aYGfLgfk1ZxoiJu9UlkvPSyaHBcoAJ
-  bucket: limuzi-aliyun-2020
-  dir: lyFile/
-  server-path: c:/lyFile
+
 
 
 #多数据源
