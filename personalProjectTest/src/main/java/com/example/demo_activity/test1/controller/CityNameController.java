@@ -3,6 +3,7 @@ package com.example.demo_activity.test1.controller;
 
 import com.example.demo_activity.test1.model.CityName;
 import com.example.demo_activity.test1.service.ICityNameService;
+import com.example.demo_activity.test1.tips.SuccessTip;
 import com.example.demo_activity.test1.utils.AliYunUploadFile;
 import com.example.demo_activity.test1.utils.FileImportExportUtilss;
 import com.example.demo_activity.test1.utils.FileUtils;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpRequest;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -52,6 +54,13 @@ public class CityNameController {
     public Object getPersonById(String cityId){
         CityName cityNameById = cityNameService.getCityNameById(cityId);
         return cityNameById;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/insertVoList")
+    public Object insertVoList(int size){
+        cityNameService.insertVoList(size);
+        return new SuccessTip();
     }
 
     /**

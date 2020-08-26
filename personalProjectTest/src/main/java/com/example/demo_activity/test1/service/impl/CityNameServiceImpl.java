@@ -13,8 +13,10 @@ import com.example.demo_activity.test1.service.ICityNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -56,5 +58,19 @@ public class CityNameServiceImpl extends ServiceImpl<CityNameMapper, CityName> i
         stringRedisTemplate.opsForValue().set("city",city);
         System.out.println("名字是"+city);
         return cityname;
+    }
+
+    @Transactional
+    @DataSource(name = DSEnum.DATA_SOURCE_TEST)
+    @Override
+    public void insertVoList(int size) {
+        ArrayList<CityName> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            CityName cityName = new CityName();
+            cityName.setCountry("中国罗山" + i);
+            cityName.setCity("定远" + i);
+            list.add(cityName);
+        }
+        iCityNameService.insertBatch(list);
     }
 }

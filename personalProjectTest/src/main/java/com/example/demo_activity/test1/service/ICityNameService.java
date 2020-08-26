@@ -16,4 +16,5 @@ public interface ICityNameService extends IService<CityName> {
 
     CityName getCityNameById(String cityId);
 
+    void insertVoList(int size);
 }
